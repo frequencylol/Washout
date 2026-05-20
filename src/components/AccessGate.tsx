@@ -9,7 +9,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-const ACCESS_CODE = "2009009";
+const ACCESS_CODE = "2008008";
 const STORAGE_KEY = "washout.access";
 
 export function AccessGate({ children }: { children: React.ReactNode }) {
