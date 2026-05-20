@@ -11,9 +11,9 @@ import bs58 from "bs58";
 import { getConnection } from "./solana-network";
 import { loadSubwallets, toKeypair, type StoredWallet } from "./subwallets";
 import { getPhantom } from "./phantom";
+import { uploadMetadataServer, type IpfsResponse } from "./server-functions";
 
 const PUMPPORTAL_TRADE_LOCAL = "https://pumpportal.fun/api/trade-local";
-const PUMP_IPFS = "https://pump.fun/api/ipfs";
 
 export interface CoinMetadataInput {
   name: string;
@@ -25,10 +25,7 @@ export interface CoinMetadataInput {
   website?: string;
 }
 
-export interface IpfsResponse {
-  metadataUri: string;
-  metadata: { name: string; symbol: string; image: string };
-}
+export type { IpfsResponse } from "./server-functions";
 
 export async function uploadMetadata(input: CoinMetadataInput): Promise<IpfsResponse> {
   const fd = new FormData();
@@ -40,9 +37,8 @@ export async function uploadMetadata(input: CoinMetadataInput): Promise<IpfsResp
   fd.append("telegram", input.telegram || "");
   fd.append("website", input.website || "");
   fd.append("showName", "true");
-  const r = await fetch(PUMP_IPFS, { method: "POST", body: fd });
-  if (!r.ok) throw new Error(`IPFS upload failed: ${r.status} ${await r.text()}`);
-  return r.json();
+  // Use server function to avoid CORS issues
+  return uploadMetadataServer({ data: fd });
 }
 
 async function getTradeTx(body: Record<string, unknown>): Promise<VersionedTransaction> {

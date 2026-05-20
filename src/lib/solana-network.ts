@@ -27,8 +27,9 @@ export function setRpcOverride(url: string | null) {
 export function getConnection(network: Network = getNetwork()): Connection {
   const override = getRpcOverride();
   // Use more reliable public RPCs as fallback
+  // Note: api.mainnet-beta.solana.com is heavily rate-limited/blocked from browsers
   const defaultRpc = network === "mainnet-beta" 
-    ? "https://api.mainnet-beta.solana.com"
+    ? "https://mainnet.helius-rpc.com/?api-key=1d8740dc-e5f4-421c-b823-e1bad1889eff"
     : "https://api.devnet.solana.com";
   const url = override || defaultRpc;
   return new Connection(url, {
